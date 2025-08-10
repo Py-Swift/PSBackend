@@ -114,6 +114,8 @@ public final class PSBackend {
     @PyCall
     public func target_dependencies(target_type: XcodeTarget_Type) async throws -> [Dependency]
     
+    @PyCall
+    public func wrapper_imports(target_type: XcodeTarget_Type) async throws -> [[String:PyPointer]]
     
     public func install(support: FilePath) async throws {
         for fw in try await frameworks() {
