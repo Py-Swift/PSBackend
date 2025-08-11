@@ -87,6 +87,15 @@ extension SwiftPackage: PySerializing.PyDeserialize {
     }
 }
 
+extension [[String:PyPointer]] {
+    static func casted(from object: PyPointer) throws -> Self {
+        try object.compactMap { element in
+            guard let element else { return nil }
+            return try [String:PyPointer].init(object: element)
+        }
+    }
+    
+}
 
 
 @PyClass()
