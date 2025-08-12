@@ -96,7 +96,58 @@ extension [[String:PyPointer]] {
     }
     
 }
-
+public struct WrapperImporter: PyDeserialize {
+    
+    public let libraries: [Library]
+    public let modules: [WrapperImport]
+    
+    public init(object: PyPointer) throws {
+        libraries = try PyDict_GetItem(object, key: "libraries")
+        modules = try PyDict_GetItem(object, key: "modules")
+    }
+    
+    public struct Library: CustomStringConvertible, PyDeserialize {
+        
+        let name: String
+        
+        public init(object: PyPointer) throws {
+            name = try .init(object: object)
+        }
+        
+        public var description: String {
+            "import \(name)"
+        }
+    }
+    
+    public enum WrapperImport: PyDeserialize, CustomStringConvertible {
+        
+        case static_import(String)
+        case name_import(name: String, module: String)
+        
+        public init(object: PyPointer) throws {
+            switch object {
+            case &PyUnicode_Type:
+                self = .static_import(try .init(object: object))
+            case &PyDict_Type:
+                self = .name_import(
+                    name: try PyDict_GetItem(object, key: "name"),
+                    module: try PyDict_GetItem(object, key: "module")
+                )
+            default:
+                throw PyStandardException.typeError
+            }
+        }
+        
+        public var description: String {
+            switch self {
+            case .static_import(let string):
+                string
+            case .name_import(let name, let module):
+                ".init(name: \(name), module: \(module).py_init )"
+            }
+        }
+    }
+}
 
 @PyClass()
 @PyContainer(weak_ref: false)
@@ -124,7 +175,16 @@ public final class PSBackend {
     public func target_dependencies(target_type: XcodeTarget_Type) async throws -> [Dependency]
     
     @PyCall
-    public func wrapper_imports(target_type: XcodeTarget_Type) async throws -> [[String:PyPointer]]
+    public func wrapper_imports(target_type: XcodeTarget_Type) throws -> [WrapperImporter]
+    
+    @PyCall
+    public func pre_main_swift(libraries: [String], modules: [String]) throws -> String?
+    
+    @PyCall
+    public func main_swift(libraries: [String], modules: [String]) throws -> String?
+    
+    @PyCall
+    public func plist_entries(plist: PyPointer, target_type: XcodeTarget_Type) throws
     
     public func install(support: FilePath) async throws {
         for fw in try await frameworks() {
