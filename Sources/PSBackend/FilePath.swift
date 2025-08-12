@@ -50,6 +50,8 @@ public final class FilePath: PySerializable {
     func mkpath() throws {
         try value.mkpath()
     }
+    
+    @PyProperty var exists: Bool { value.exists }
 }
 
 

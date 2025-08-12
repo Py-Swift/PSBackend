@@ -186,7 +186,11 @@ public final class PSBackend {
     @PyCall
     public func plist_entries(plist: PyPointer, target_type: XcodeTarget_Type) throws
     
-    public func install(support: FilePath) async throws {
+    @PyCall func install(support: FilePath) async throws
+    
+    public func do_install(support: FilePath) async throws {
+        try await install(support: support)
+        
         for fw in try await frameworks() {
             let path = fw.value
             try path.copy(support.value + path.lastComponent)
