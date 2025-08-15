@@ -209,6 +209,11 @@ public final class PSBackend {
     }
 }
 
+extension PSBackend: PySerialize {
+    public var pyPointer: PyPointer { py_target }
+}
+
+
 extension PSBackend {
     
     
