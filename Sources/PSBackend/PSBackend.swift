@@ -200,8 +200,53 @@ public final class PSBackend {
         }
     }
     
+    
+    fileprivate static var loadedBackends: [PSBackend] = []
+    
+    @PyMethod
+    static func loaded_backends() -> [PSBackend] {
+        loadedBackends
+    }
 }
 
+extension PSBackend {
+    
+    
+    fileprivate static func load_backend(name: String, path: Path? = nil) throws -> PSBackend {
+        guard
+            let _backend = PyImport_ImportModule("pyswiftbackends.\(name)"),
+            let backend = PyObject_GetAttr(_backend, "backend")
+        else {
+            PyErr_Print()
+            fatalError()
+        }
+        
+        return try .casted(from: backend)
+    }
+    
+    fileprivate static func load_backend(external name: String, path: Path? = nil) throws -> PSBackend {
+        guard
+            let _backend = PyImport_ImportModule("\(name)"),
+            let backend = PyObject_GetAttr(_backend, "backend")
+        else {
+            PyErr_Print()
+            fatalError()
+        }
+        
+        return try .casted(from: backend)
+    }
+    
+    public static func load(name: String, path: Path? = nil) throws -> PSBackend {
+        let backend = switch name {
+        case let external where external.contains("."):
+            try load_backend(external: external, path: path)
+        default:
+            try load_backend(name: name, path: path)
+        }
+        loadedBackends.append(backend)
+        return backend
+    }
+}
 
 
 

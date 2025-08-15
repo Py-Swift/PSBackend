@@ -52,8 +52,10 @@ public final class FilePath: PySerializable {
     }
     
     @PyProperty var exists: Bool { value.exists }
+    
+    
+    
 }
-
 
 
 extension FilePath: PyNumberProtocol, PyStrProtocol {
