@@ -181,7 +181,7 @@ public final class PSBackend {
     public func will_modify_main_swift() throws -> Bool
     
     @PyCall
-    public func modify_main_swift() throws -> [CodeBlock]
+    public func modify_main_swift(libraries: [String], modules: [String]) throws -> [CodeBlock]
     
     @PyCall
     public func plist_entries(plist: PyPointer, target_type: XcodeTarget_Type) throws
