@@ -28,7 +28,11 @@ public final class CodeBlock: PyDeserialize {
 }
 
 public extension CodeBlock {
-    enum Priority: Int, PySerializable, Equatable {
+    enum Priority: Int, PySerializable, Comparable {
+        public static func < (lhs: CodeBlock.Priority, rhs: CodeBlock.Priority) -> Bool {
+            lhs.rawValue < rhs.rawValue
+        }
+        
         case imports
         case post_imports
         case pre_main
