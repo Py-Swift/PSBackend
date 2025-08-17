@@ -191,6 +191,11 @@ public final class PSBackend {
     @PyCall
     public func copy_to_site_packages(site_path: FilePath, platform: String) async throws
     
+    @PyCall
+    public func will_modify_pyproject() throws -> Bool
+    
+    @PyCall
+    public func modify_pyproject(path: FilePath) throws 
     
     public func do_install(support: FilePath) async throws {
         try await install(support: support)
