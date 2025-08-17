@@ -14,7 +14,7 @@ import PySwiftWrapper
 import PySwiftObject
 
 @PyClass
-public final class CodeBlock {
+public final class CodeBlock: PyDeserialize {
     
     public var code: String
     public var priority: Priority
@@ -24,7 +24,6 @@ public final class CodeBlock {
         self.code = code
         self.priority = .init(rawValue: priority) ?? .post_imports
     }
-   
     
 }
 
