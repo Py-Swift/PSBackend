@@ -176,14 +176,12 @@ public final class PSBackend {
     
     @PyCall
     public func wrapper_imports(target_type: XcodeTarget_Type) throws -> [WrapperImporter]
-    
-    @PyCall
-    public func pre_main_swift(libraries: [String], modules: [String]) throws -> String?
+  
     @PyCall
     public func will_modify_main_swift() throws -> Bool
     
     @PyCall
-    public func main_swift(libraries: [String], modules: [String]) throws -> String?
+    public func modify_main_swift() throws -> [CodeBlock]
     
     @PyCall
     public func plist_entries(plist: PyPointer, target_type: XcodeTarget_Type) throws
