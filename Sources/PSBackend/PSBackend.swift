@@ -195,7 +195,10 @@ public final class PSBackend {
     public func will_modify_pyproject() throws -> Bool
     
     @PyCall
-    public func modify_pyproject(path: FilePath) throws 
+    public func modify_pyproject(path: FilePath) throws
+    
+    @PyCall
+    public func exclude_dependencies() throws -> [String]
     
     public func do_install(support: FilePath) async throws {
         try await install(support: support)
