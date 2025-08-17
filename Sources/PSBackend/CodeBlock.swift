@@ -28,7 +28,7 @@ public final class CodeBlock: PyDeserialize {
 }
 
 public extension CodeBlock {
-    enum Priority: Int, PySerializable {
+    enum Priority: Int, PySerializable, Equatable {
         case imports
         case post_imports
         case pre_main
