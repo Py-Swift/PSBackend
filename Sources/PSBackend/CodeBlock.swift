@@ -35,6 +35,7 @@ public extension CodeBlock {
         case pre_main
         case main
         case post_main
+        case on_exit
     }
 }
 
