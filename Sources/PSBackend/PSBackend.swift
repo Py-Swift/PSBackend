@@ -179,6 +179,8 @@ public final class PSBackend {
     
     @PyCall
     public func pre_main_swift(libraries: [String], modules: [String]) throws -> String?
+    @PyCall
+    public func will_modify_main_swift() throws -> Bool
     
     @PyCall
     public func main_swift(libraries: [String], modules: [String]) throws -> String?
@@ -280,6 +282,7 @@ public extension PSBackend {
 public struct BackendTools: PyModuleProtocol {
     public static var py_classes: [any (PyClassProtocol & AnyObject).Type] = [
         FilePath.self,
-        PSBackend.self
+        PSBackend.self,
+        CodeBlock.self
     ]
 }
