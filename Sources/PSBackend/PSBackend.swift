@@ -189,7 +189,8 @@ public final class PSBackend {
     @PyCall func install(support: FilePath) async throws
     
     @PyCall
-    public func copy_to_site_packages(site_path: FilePath) async throws
+    public func copy_to_site_packages(site_path: FilePath, platform: String) async throws
+    
     
     public func do_install(support: FilePath) async throws {
         try await install(support: support)
