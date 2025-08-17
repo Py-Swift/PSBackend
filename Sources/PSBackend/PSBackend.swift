@@ -108,14 +108,14 @@ public struct WrapperImporter: PyDeserialize {
     
     public struct Library: CustomStringConvertible, PyDeserialize {
         
-        let name: String
+        public let name: String
         
         public init(object: PyPointer) throws {
             name = try .init(object: object)
         }
         
         public var description: String {
-            "import \(name)"
+            name
         }
     }
     
