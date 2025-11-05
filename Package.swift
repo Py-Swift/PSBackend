@@ -8,6 +8,7 @@ import PackageDescription
 let package_dependencies: [Package.Dependency] = [
     //.package(url: "https://github.com/py-swift/PySwiftKit", from: .init(313, 0, 0)),
     .package(url: "https://github.com/py-swift/PySwiftKit", branch: "development"),
+    .package(url: "https://github.com/py-swift/CPython", .upToNextMinor(from: .init(313, 7, 0))),
     .package(url: "https://github.com/py-swift/PyFileGenerator", from: .init(0, 0, 1)),
     // add other packages
     .package(url: "https://github.com/kylef/PathKit", .upToNextMajor(from: "1.0.1")),
@@ -22,6 +23,7 @@ let package_targets: [Target] = [
         name: "PSBackend",
         dependencies: [
             .product(name: "PySwiftKitBase", package: "PySwiftKit"),
+            "CPython",
             // add other package products or internal targets
             "PathKit",
             .product(name: "XcodeGenKit", package: "XcodeGen"),
