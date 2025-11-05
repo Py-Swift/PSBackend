@@ -6,30 +6,40 @@
 //
 
 import Foundation
-import PySwiftKit
-import PySerializing
-import PyUnpack
-import PySwiftWrapper
-import PySwiftObject
-import PyTypes
-import PyComparable
+@preconcurrency import PySwiftKit
+@preconcurrency import PySerializing
+@preconcurrency import PySwiftWrapper
+
+
 
 import PathKit
 
-@PyClass(bases: [.number, .str])
-public final class FilePath: PySerializable {
+@MainActor
+@PyClass(bases: [.number, .str], swift_mode: .v6)
+public final class FilePath: @preconcurrency PySerialize, @preconcurrency PyDeserialize, @preconcurrency PyClassProtocol {
     public var value: Path
     
     public init(value: Path) {
         self.value = value
     }
     
-    public init(object: PyPointer) throws {
-        value = .init(try .init(object: object))
+    public static func casted(from object: PyPointer) throws -> Self {
+        switch object {
+            case FilePath.PyType:
+                return Unmanaged.fromOpaque(PyObject_AS_SwiftPtr(object)).takeUnretainedValue()
+            case .PyUnicode:
+                return .init(value: try .casted(from: object))
+            default: fatalError()
+        }
     }
     
-    public var pyPointer: PyPointer { Self.asPyPointer(self) }
+    public static func casted(unsafe object: PyPointer) throws -> Self {
+        return .init(value: try .casted(unsafe: object))
+    }
     
+    @MainActor public func pyPointer() -> PyPointer {
+        Self.asPyPointer(self)
+    }
     
     @PyMethod
     static func ps_support() -> FilePath {
@@ -55,10 +65,11 @@ public final class FilePath: PySerializable {
     
     
     
+    
 }
 
 
-extension FilePath: PyNumberProtocol, PyStrProtocol {
+extension FilePath: @preconcurrency PyNumberProtocol, @preconcurrency PyStrProtocol {
     
     static func +(l: FilePath, r: String) -> FilePath {
         .init(value: l.value + r)
@@ -69,25 +80,25 @@ extension FilePath: PyNumberProtocol, PyStrProtocol {
     }
     
     public func nb_add(_ other: PyPointer) -> PyPointer? {
-        if let string = try? String(object: other) {
-            return (self + string).pyPointer
+        if let string = try? String.casted(from: other) {
+            return (self + string).pyPointer()
         }
         return nil
     }
 }
 
-extension PyCast where T == FilePath {
-    public static func cast(from object: PyPointer) throws -> T {
-        switch object {
-        case FilePath.PyType:
-            return UnPackPyPointer(from: object)
-        case .PyUnicode:
-            return try .init(object: object)
-        default: fatalError()
-        }
-
-    }
-}
+//extension PyCast where T == FilePath {
+//    public static func cast(from object: PyPointer) throws -> T {
+//        switch object {
+//        case FilePath.PyType:
+//            return UnPackPyPointer(from: object)
+//        case .PyUnicode:
+//            return try .init(object: object)
+//        default: fatalError()
+//        }
+//
+//    }
+//}
 
 extension Path {
     static var ps_shared: Path { "/Users/Shared/psproject"}
