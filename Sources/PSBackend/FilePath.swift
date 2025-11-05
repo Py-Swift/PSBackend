@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@preconcurrency import CPython
 @preconcurrency import PySwiftKit
 @preconcurrency import PySerializing
 @preconcurrency import PySwiftWrapper
