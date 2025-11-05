@@ -27,7 +27,7 @@ public final class FilePath: @preconcurrency PySerialize, @preconcurrency PyDese
     public static func casted(from object: PyPointer) throws -> Self {
         switch object {
             case FilePath.PyType:
-                return Unmanaged.fromOpaque(PyObject_AS_SwiftPtr(object)).takeUnretainedValue()
+                return Self.unsafeUnpacked(object)
             case .PyUnicode:
                 return .init(value: try .casted(from: object))
             default: fatalError()
