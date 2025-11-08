@@ -34,12 +34,13 @@ public final class FilePath: @preconcurrency PySerialize, @preconcurrency PyDese
         }
     }
     
-    public static func casted(unsafe object: PyPointer) throws -> Self {
-        return .init(value: try .casted(unsafe: object))
-    }
+//    public static func casted(unsafe object: PyPointer) throws -> Self {
+//        return .init(value: try .casted(unsafe: object))
+//    }
     
     @MainActor public func pyPointer() -> PyPointer {
-        Self.asPyPointer(self)
+        print(Self.self, PyHasGIL())
+        return Self.asPyPointer(self)
     }
     
     @PyMethod
