@@ -248,7 +248,7 @@ public final class PSBackend: @unchecked Sendable, @preconcurrency PyClassProtoc
     @PyCall func install(support: FilePath) async throws
     
     @PyCall
-    public func copy_to_site_packages(site_path: FilePath, platform: String) async throws
+    public func copy_to_site_packages(site_path: FilePath, platform: String) throws
     
     @PyCall
     public func will_modify_pyproject() throws -> Bool
