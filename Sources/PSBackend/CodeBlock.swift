@@ -7,22 +7,30 @@ import Foundation
 
 
 import Foundation
-import PySwiftKit
-import PySerializing
-import PyUnpack
-import PySwiftWrapper
-import PySwiftObject
 
-@PyClass
+@preconcurrency import CPython
+@preconcurrency import PySwiftKit
+@preconcurrency import PySerializing
+@preconcurrency import PySwiftWrapper
+
+extension UnsafeMutablePointer<PyTypeObject>: @unchecked Swift.Sendable {}
+extension PyTypeObject: @unchecked Swift.Sendable {}
+
+
+@PyClass()
 public final class CodeBlock: PyDeserialize {
     
     public var code: String
     public var priority: Priority
     
+    
+    
     @PyInit
     init(code: String, priority: Int) {
         self.code = code
         self.priority = .init(rawValue: priority) ?? .post_imports
+        
+        //let a: String = try! PyDict_GetItem<String>(.None, key: "code")
     }
     
 }
@@ -43,6 +51,7 @@ public extension CodeBlock {
 }
 
 extension CodeBlock: CustomStringConvertible {
+    
     public var description: String {
         code
     }
