@@ -15,9 +15,9 @@ import Foundation
 
 import PathKit
 
-@MainActor
-@PyClass(bases: [.number, .str], swift_mode: .v6)
-public final class FilePath: @preconcurrency PySerialize, @preconcurrency PyDeserialize, @preconcurrency PyClassProtocol {
+//@MainActor
+@PyClass(bases: [.number, .str])
+public final class FilePath: @preconcurrency PySerialize, @preconcurrency PyDeserialize {
     public var value: Path
     
     public init(value: Path) {
@@ -38,8 +38,8 @@ public final class FilePath: @preconcurrency PySerialize, @preconcurrency PyDese
 //        return .init(value: try .casted(unsafe: object))
 //    }
     
-    @MainActor public func pyPointer() -> PyPointer {
-        print(Self.self, PyHasGIL())
+    //@MainActor
+    public func pyPointer() -> PyPointer {
         return Self.asPyPointer(self)
     }
     

@@ -17,8 +17,8 @@ extension UnsafeMutablePointer<PyTypeObject>: @unchecked Swift.Sendable {}
 extension PyTypeObject: @unchecked Swift.Sendable {}
 
 
-@PyClass(swift_mode: .v6)
-public final class CodeBlock: PyDeserialize, @preconcurrency PyClassProtocol {
+@PyClass()
+public final class CodeBlock: PyDeserialize {
     
     public var code: String
     public var priority: Priority

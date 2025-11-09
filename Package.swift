@@ -30,6 +30,9 @@ let package_targets: [Target] = [
         ],
         resources: [
 
+        ],
+        swiftSettings: [
+            .swiftLanguageMode(.v5)
         ]
     )
 ]
@@ -40,7 +43,7 @@ let package = Package(
     name: "PSBackend",
     platforms: [
         //.iOS(.v13),
-        .macOS(.v11)
+        .macOS(.v13)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.

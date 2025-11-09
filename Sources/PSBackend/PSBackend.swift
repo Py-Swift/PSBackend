@@ -207,7 +207,7 @@ public struct WrapperImporter: PyDeserialize {
     }
 }
 
-@MainActor
+//@MainActor
 @PyClass(swift_mode: .v6)
 @PyContainer(weak_ref: false)
 public final class PSBackend: @unchecked Sendable, @preconcurrency PyClassProtocol {
@@ -269,11 +269,12 @@ public final class PSBackend: @unchecked Sendable, @preconcurrency PyClassProtoc
     }
     
     
-    @MainActor fileprivate static var loadedBackends: [PSBackend] = []
+    //@MainActor
+    fileprivate static var loadedBackends: [PSBackend] = []
     
     
     @PyMethod
-    @MainActor
+    //@MainActor
     static func loaded_backends() -> [PSBackend] {
         loadedBackends
     }
@@ -320,7 +321,7 @@ extension PSBackend {
         return try .casted(from: backend)
     }
     
-    @MainActor
+    //@MainActor
     public static func load(name: String, path: Path? = nil) throws -> PSBackend {
         let backend = switch name {
         case let external where external.contains("."):
@@ -346,12 +347,66 @@ extension PSBackend {
     }
 }
 
-@MainActor
+//@MainActor
 @PyModule
 public struct BackendTools: @preconcurrency PyModuleProtocol {
+    
+    @PyFunction()
+    static func run_pip(args: [String]) throws {
+        try pipCommand(arguments: args)
+    }
+    
+    @PyFunction
+    static func task(exe: String, args: [String], env: [String:String]?) throws {
+        try taskCommand(executable: exe, arguments: args, env: env)
+    }
+    
     public static let py_classes: [any (PyClassProtocol & AnyObject).Type] = [
         FilePath.self,
         PSBackend.self,
-        CodeBlock.self
+        CodeBlock.self,
+        PSProcess.self
     ]
+}
+
+extension Process {
+    public var executablePath: Path? {
+        get {
+            if let path = executableURL?.path() {
+                return .init(path)
+            }
+            return nil
+        }
+        set {
+            executableURL = newValue?.url
+        }
+    }
+}
+
+public func pipCommand(arguments: [String]) throws {
+    //print(getSiteFolder(), wheel_platform)
+    let task = Process()
+    let pip3: Path = if let path = ProcessInfo.processInfo.environment["HOST_PYTHON_ROOT"] {
+        .init(path) + "bin/pip3"
+    } else {
+        fatalError("HOST_PYTHON_ROOT not set")
+    }
+    task.arguments = arguments
+    task.executablePath = pip3
+    task.standardInput = nil
+            task.launch()
+            task.waitUntilExit()
+}
+
+func taskCommand(executable: String, arguments: [String], env: [String:String]?) throws {
+    let task = Process()
+    
+    task.arguments = arguments
+    task.executablePath = .init(executable)
+    if let env {
+        task.environment = env
+    }
+    task.standardInput = nil
+    task.launch()
+    task.waitUntilExit()
 }
