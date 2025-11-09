@@ -6,8 +6,8 @@ import PackageDescription
 
 
 let package_dependencies: [Package.Dependency] = [
-    //.package(url: "https://github.com/py-swift/PySwiftKit", from: .init(313, 0, 0)),
-    .package(url: "https://github.com/py-swift/PySwiftKit", branch: "development"),
+    .package(url: "https://github.com/py-swift/PySwiftKit", from: .init(313, 0, 0)),
+    //.package(url: "https://github.com/py-swift/PySwiftKit", branch: "development"),
     .package(url: "https://github.com/py-swift/CPython", .upToNextMinor(from: .init(313, 7, 0))),
     .package(url: "https://github.com/py-swift/PyFileGenerator", from: .init(0, 0, 1)),
     // add other packages
